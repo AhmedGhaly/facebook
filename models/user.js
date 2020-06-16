@@ -9,6 +9,24 @@ const userSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'post'
         }
+    ],
+    friends: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user' 
+        }
+    ],
+    appendingRequest : [    
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user' 
+        }   
+    ],
+    requests : [    
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'user' 
+        }   
     ]
 
 })

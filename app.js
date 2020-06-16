@@ -12,6 +12,7 @@ require('dotenv').config()
 const feedRouter = require('./routes/feed')
 const userRouter = require('./routes/user')
 const authRouter = require('./routes/auth')
+const commentRouter = require('./routes/comment')
 
 app.use(bodyParser.json())
 app.use(logger('dev'));
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/feed', feedRouter)
 app.use('/', userRouter)
+app.use('/', commentRouter)
 app.use('/auth', authRouter)
 
 
@@ -47,8 +49,3 @@ mongoose.connect(process.env.MONGOOSE_URL).then(() => {
     
     server.listen(port);
 })
-//////////////////////////////////////////////////
-
-
-
-//401 not auth
