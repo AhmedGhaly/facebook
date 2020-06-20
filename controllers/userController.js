@@ -25,8 +25,74 @@ exports.postPost = (req, res, next) => {
             message: 'done',
             post: post
         })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 
+}
+
+exports.deletePost = (req, res, next) => {
+    const {userId} = req
+    const {postId} = req.params
+    Post.findById(postId).then(post => {
+        if(!post) {
+            const err = new Error('invalid post id')
+            err.status = 403
+            throw err
+        }
+        if(post.userId != userId) {
+            const err = new Error('you not allow to do that')
+            err.status = 403
+            throw err
+        }
+        return Post.findByIdAndDelete(postId)
+    }).then(post => {
+        res.status(200).json({
+            message: 'deleted'
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
+    })
+}
+
+exports.editePost = (req, res, next) => {
+    const {userId} = req
+    const {postId} = req.params
+    const {content} = req.body
+    Post.findById(postId).then(post => {
+        if(!post) {
+            const err = new Error('invalid post id')
+            err.status = 403
+            throw err
+        }
+        if(post.userId != userId) {
+            const err = new Error('you not allow to do that')
+            err.status = 403
+            throw err
+        }
+        if(content)
+            post.content = content
+        return post.save()
+    }).then(post => {
+        res.status(200).json({
+            message: 'done',
+            post: post
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
+    })
 }
 
 exports.likePost = (req, res, next) => {
@@ -51,6 +117,12 @@ exports.likePost = (req, res, next) => {
         res.status(201).json({
             message: 'done',
             post: post
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }
@@ -77,6 +149,12 @@ exports.dislike = (req, res, next) => {
         res.status(201).json({
             message: 'done',
             post: post
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }
@@ -107,6 +185,12 @@ exports.friendRequesst = (req, res, next) => {
         res.status(200).json({
             message: 'done',
             user: user
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }
@@ -159,6 +243,12 @@ exports.acceptRequest = (req, res, next) => {
             message: 'done',
             user: user
         })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 
 }
@@ -186,7 +276,13 @@ exports.commentPost = (req, res, next) => {
     }).then(post => {
         res.status(200).json({
             message: 'done',
-            post: post
+            comment: postComment
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }
@@ -206,6 +302,12 @@ exports.profile = (req, res, next) => {
         res.status(201).json({
             message: 'done',
             user: user
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }
@@ -235,6 +337,12 @@ exports.nestedComment = (req, res, next) => {
             message: 'done',
             comment: comment
         })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 }
 
@@ -263,6 +371,12 @@ exports.likeComment = (req, res, next) => {
             message: 'done',
             comment: comment
         })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 }
 
@@ -290,6 +404,12 @@ exports.disLikeComment = (req, res, next) => {
         res.status(201).json({
             message: 'done',
             comment: comment
+        })
+    }).catch(err => {
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
         })
     })
 }

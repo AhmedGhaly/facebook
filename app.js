@@ -5,8 +5,11 @@ const http = require('http');
 const mongoose = require('mongoose')
 const app = express();
 const bodyParser = require('body-parser');
-require('dotenv').config()
+const cors = require('cors')
 
+
+require('dotenv').config()
+app.use(cors())
 
 // routers
 const feedRouter = require('./routes/feed')
@@ -19,9 +22,9 @@ app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/feed', feedRouter)
-app.use('/', userRouter)
-app.use('/', commentRouter)
-app.use('/auth', authRouter)
+app.use(userRouter)
+app.use(commentRouter)
+app.use(authRouter)
 
 
 
@@ -33,6 +36,7 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+    console.log(err)
     const status = err.status || 500
     res.status(status).json({
       message : err.message,
@@ -42,7 +46,7 @@ app.use((err, req, res, next) => {
 //////////////////////////////////////////////////
 
 ////////////// server config /////////////////
-const port = process.env.PORT || '3000';
+const port = process.env.PORT || '8080';
 mongoose.connect(process.env.MONGOOSE_URL).then(() => {
     app.set('port', port);
     const server = http.createServer(app);

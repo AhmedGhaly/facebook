@@ -1,10 +1,19 @@
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const validationResult = require('express-validator').validationResult
+
 const User = require('../models/user')
 
 exports.login = (req, res, next) => {
     const {email, password } = req.body
     let logUser
+    const err = validationResult(req)
+    if(!err.isEmpty()) {
+        err.status = 400
+        res.status(500).json({
+            err: err.array()
+        })
+    }
     User.findOne({email: email}).then(user => {
         if(!user) {
             const err = new Error('this email dose not exist in the data base')
@@ -22,17 +31,28 @@ exports.login = (req, res, next) => {
         const token = jwt.sign({id: logUser._id}, process.env.JWT_TOKEN)
         res.status(200).json({
             message: 'done',
-            token: token
+            token: token,
+            userId: logUser._id,
+            userName: logUser.name
         })
     }).catch(err => {
-        if(!err.statusCode)
-            err.statusCode = 500
-        next(err)
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 }
 
 exports.signup = (req, res, next) => {
     const { email, password, name } = req.body
+    const err = validationResult(req)
+    if(!err.isEmpty()) {
+        err.status = 400
+        res.status(500).json({
+            err: err.array()
+        })
+    }
     User.findOne({email: email}).then(user => {
         if(user) {
             const err = new Error('this is is aleady exist')
@@ -53,8 +73,10 @@ exports.signup = (req, res, next) => {
             user: user
         })
     }).catch(err => {
-        if(!err.statusCode)
-            err.statusCode = 500
-        next(err)
+        if(!err.status)
+            err.status = 500
+        res.status(err.status).json({
+            err: err.message
+        })
     })
 }
