@@ -19,22 +19,42 @@ exports.home = (req, res, next) => {
     User.findById(userId)
     .populate({
         path: 'posts',
-        populate:{path: 'userId comments', select: 'name comments  userId comment', populate: {path: 'userId comments', select: 'name comments userId comment'}},
-        
+        populate:{
+            path: 'userId comments', 
+            select: 'name comments  userId comment', 
+            populate: {
+                path: 'userId comments', 
+                select: 'name comment userId',
+                populate: {
+                    path: 'userId',
+                    selece: "name"
+                }
+            }
+        },        
     })
     .populate({
         path: 'friends',
         select: 'posts',
         populate: {
             path: 'posts',
-            populate:{path: 'userId comments', select: 'name comments  userId comment', populate: {path: 'userId comments', select: 'name comments userId comment'}},
+            populate:{
+                path: 'userId comments',
+                 select: 'name comments  userId comment',
+                  populate: {
+                      path: 'userId comments',
+                      select: 'name comment userId'
+                    },
+                    populate: {
+                        path: 'userId',
+                        selece: "name"
+                    }
+            },
         },
 
     }).then(user => {
         post(user.friends)
         posts = posts.concat(user.posts)
         posts.sort(compare)
-        console.log(posts)
         res.status(200).json({
             message: 'done',
             posts: posts

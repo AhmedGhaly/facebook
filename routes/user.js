@@ -28,9 +28,3 @@ router.post('/acceptrequest/:userId', isAuth, userController.acceptRequest)
 router.get('/profile', isAuth, userController.profile)
 
 module.exports = router
-
-/*
-    block
-    share post
-    validation
-*/

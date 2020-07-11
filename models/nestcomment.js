@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const commentSchema = mongoose.Schema({
+const nestedcommentSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user'
@@ -18,12 +18,6 @@ const commentSchema = mongoose.Schema({
             ref: 'user'
         }
     ],
-    comments : [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'nestedcomment'
-        }
-    ]
 })
 
-module.exports = mongoose.model('comment', commentSchema)
+module.exports = mongoose.model('nestedcomment', nestedcommentSchema)

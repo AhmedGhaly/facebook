@@ -1,7 +1,7 @@
 const User = require('../models/user')
 const Post = require('../models/post')
 const Comment = require('../models/comment')
-
+const NestedComment = require('../models/nestcomment')
 exports.postPost = (req, res, next) => {
     const userId = req.userId
     const { content } = req.body
@@ -323,7 +323,7 @@ exports.nestedComment = (req, res, next) => {
             err.status = 404
             throw err
         }
-        newComment = new Comment({
+        newComment = new NestedComment({
             comment: commentText,
             userId: userId
         })
